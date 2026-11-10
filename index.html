@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday! 🎂</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3, #a18cd1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 550px;
+    padding: 35px 22px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 25px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    z-index: 2;
+    animation: appear 1.2s ease;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cake {
+    font-size: 85px;
+    animation: bounce 2s infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+h1 {
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    margin-bottom: 15px;
+    text-shadow: 0 3px 15px rgba(255,255,255,0.5);
+}
+
+.name {
+    color: #fff3a6;
+    font-size: clamp(1.5rem, 6vw, 2.3rem);
+    margin-bottom: 20px;
+}
+
+.message {
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+button {
+    padding: 14px 28px;
+    background: #fff;
+    color: #e94e8b;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+    background: #fff3a6;
+}
+
+.footer {
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+/* Floating balloons */
+
+.balloon {
+    position: absolute;
+    bottom: -150px;
+    font-size: 45px;
+    animation: float 10s linear infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.balloon:nth-child(2) { left: 10%; animation-delay: 1s; }
+.balloon:nth-child(3) { left: 80%; animation-delay: 3s; }
+.balloon:nth-child(4) { left: 45%; animation-delay: 5s; }
+.balloon:nth-child(5) { left: 65%; animation-delay: 7s; }
+
+@keyframes float {
+    0% { transform: translateY(0) rotate(0); }
+    100% { transform: translateY(-120vh) rotate(25deg); }
+}
+
+/* Confetti canvas */
+
+#confetti {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+@media(max-width: 480px) {
+    .container {
+        padding: 30px 18px;
+    }
+
+    .cake {
+        font-size: 70px;
+    }
+
+    .message {
+        font-size: 15px;
+    }
+
+    button {
+        padding: 13px 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+
+<div class="container">
+
+    <div class="cake">🎂</div>
+
+    <h1>Happy Birthday!</h1>
+
+    <div class="name">Dear Birthday Star! 💖</div>
+
+    <p class="message">
+        Wishing you a day filled with endless happiness,
+        beautiful memories, laughter and lots of love! 🌸
+        <br><br>
+        May all your dreams come true and may this new
+        chapter of your life bring you success, joy and
+        countless blessings.
+        <br><br>
+        Keep smiling and shining! ✨
+    </p>
+
+    <button onclick="celebrate()">
+        🎉 Click for a Surprise!
+    </button>
+
+    <div class="footer">
+        Made with ❤️ just for you!
+    </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+let animationId;
+
+function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function createConfetti() {
+    const colors = [
+        "#ffeb3b",
+        "#ff4081",
+        "#00e5ff",
+        "#ffffff",
+        "#b388ff",
+        "#69f0ae"
+    ];
+
+    for (let i = 0; i < 180; i++) {
+        particles.push({
+            x: Math.random() * window.innerWidth,
+            y: -Math.random() * window.innerHeight,
+            size: Math.random() * 8 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            speed: Math.random() * 4 + 2,
+            angle: Math.random() * 360,
+            rotation: Math.random() * 8 - 4
+        });
+    }
+}
+
+function animateConfetti() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    particles.forEach((p) => {
+        p.y += p.speed;
+        p.x += Math.sin(p.y * 0.02) * 2;
+        p.angle += p.rotation;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+    });
+
+    particles = particles.filter(
+        p => p.y < window.innerHeight + 20
+    );
+
+    if (particles.length > 0) {
+        animationId = requestAnimationFrame(animateConfetti);
+    } else {
+        cancelAnimationFrame(animationId);
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+}
+
+function celebrate() {
+    particles = [];
+    createConfetti();
+    cancelAnimationFrame(animationId);
+    animateConfetti();
+}
+
+// Automatic celebration on opening
+window.addEventListener("load", () => {
+    celebrate();
+});
+</script>
+
+</body>
+</html>
